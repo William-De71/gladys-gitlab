@@ -1,0 +1,10 @@
+Gladys GitLab integration
+Copyright 2026 William Deren
+
+This product is licensed under the Apache License, Version 2.0 (see LICENSE).
+
+It reads the official GitLab REST API v4 (https://docs.gitlab.com/api/rest/)
+of gitlab.com or of a self-managed GitLab, with the access token of the user.
+
+GitLab is a trademark of GitLab Inc. This community integration is not
+affiliated with, endorsed or sponsored by GitLab.

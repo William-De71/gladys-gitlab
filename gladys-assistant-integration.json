@@ -1,0 +1,1327 @@
+{
+  "manifest_version": 1,
+  "type": "device",
+  "name": "GitLab",
+  "description": {
+    "en": "Follow GitLab projects: releases, issues, merge requests, pipelines, scenes and widgets.",
+    "fr": "Suivez des projets GitLab : versions, issues, merge requests, pipelines, scènes et widgets.",
+    "de": "GitLab-Projekte verfolgen: Releases, Issues, Merge-Requests, Pipelines, Szenen und Widgets.",
+    "es": "Sigue proyectos de GitLab: versiones, issues, merge requests, pipelines, escenas y widgets."
+  },
+  "version": "0.1.0",
+  "docker_image": "ghcr.io/william-de71/gladys-gitlab:0.1.0",
+  "gladys_version": ">=5.3.0",
+  "categories": ["services", "notifications"],
+  "keywords": [
+    "git",
+    "gitlab.com",
+    "self-managed",
+    "merge request",
+    "pipeline",
+    "CI/CD",
+    "issue",
+    "dépôt",
+    "developer",
+    "open source"
+  ],
+  "cover_image": "https://raw.githubusercontent.com/William-De71/gladys-gitlab/main/cover.jpg",
+  "transports": ["cloud"],
+  "config_schema": [
+    {
+      "key": "intro",
+      "type": "section",
+      "label": {
+        "en": "GitLab access",
+        "fr": "Accès à GitLab",
+        "de": "Zugriff auf GitLab",
+        "es": "Acceso a GitLab"
+      },
+      "description": {
+        "en": "The integration reads gitlab.com or your own GitLab with an access token. In GitLab, open Preferences, then Access tokens, and add a personal token with the read_api scope only (read-only). A group or project access token with read_api works too. Copy the token below.",
+        "fr": "L’intégration lit gitlab.com ou votre propre GitLab avec un jeton d’accès. Dans GitLab, ouvrez Préférences, puis Jetons d’accès, et ajoutez un jeton personnel avec la seule portée read_api (lecture seule). Un jeton d’accès de groupe ou de projet avec read_api convient aussi. Copiez le jeton ci-dessous.",
+        "de": "Die Integration liest gitlab.com oder dein eigenes GitLab mit einem Zugriffstoken. Öffne in GitLab die Einstellungen, dann Zugriffstoken, und füge ein persönliches Token nur mit dem Bereich read_api hinzu (nur lesend). Ein Gruppen- oder Projekt-Zugriffstoken mit read_api geht auch. Kopiere das Token hierher.",
+        "es": "La integración lee gitlab.com o tu propio GitLab con un token de acceso. En GitLab, abre Preferencias y luego Tokens de acceso, y añade un token personal solo con el alcance read_api (solo lectura). También sirve un token de acceso de grupo o de proyecto con read_api. Copia el token aquí."
+      },
+      "links": [
+        {
+          "url": "https://gitlab.com/-/user_settings/personal_access_tokens?name=Gladys&scopes=read_api",
+          "label": {
+            "en": "Create a token on gitlab.com",
+            "fr": "Créer un jeton sur gitlab.com",
+            "de": "Token auf gitlab.com erstellen",
+            "es": "Crear un token en gitlab.com"
+          }
+        },
+        {
+          "url": "https://docs.gitlab.com/user/profile/personal_access_tokens/",
+          "label": {
+            "en": "GitLab documentation",
+            "fr": "Documentation de GitLab",
+            "de": "GitLab-Dokumentation",
+            "es": "Documentación de GitLab"
+          }
+        }
+      ]
+    },
+    {
+      "key": "url",
+      "type": "string",
+      "required": false,
+      "default": "https://gitlab.com",
+      "label": {
+        "en": "Address of the GitLab instance",
+        "fr": "Adresse de l’instance GitLab",
+        "de": "Adresse der GitLab-Instanz",
+        "es": "Dirección de la instancia de GitLab"
+      },
+      "description": {
+        "en": "https://gitlab.com, or the address of your self-managed GitLab (https://gitlab.example.com).",
+        "fr": "https://gitlab.com, ou l’adresse de votre GitLab auto-hébergé (https://gitlab.example.com).",
+        "de": "https://gitlab.com oder die Adresse deines selbst gehosteten GitLab (https://gitlab.example.com).",
+        "es": "https://gitlab.com, o la dirección de tu GitLab autoalojado (https://gitlab.example.com)."
+      },
+      "placeholder": {
+        "en": "https://gitlab.com",
+        "fr": "https://gitlab.com",
+        "de": "https://gitlab.com",
+        "es": "https://gitlab.com"
+      }
+    },
+    {
+      "key": "token",
+      "type": "secret",
+      "label": {
+        "en": "Access token",
+        "fr": "Jeton d’accès",
+        "de": "Zugriffstoken",
+        "es": "Token de acceso"
+      },
+      "description": {
+        "en": "Starts with glpat- (personal or project) or glgat- (group), with the read_api scope.",
+        "fr": "Commence par glpat- (personnel ou de projet) ou glgat- (groupe), avec la portée read_api.",
+        "de": "Beginnt mit glpat- (persönlich oder Projekt) oder glgat- (Gruppe), mit dem Bereich read_api.",
+        "es": "Empieza por glpat- (personal o de proyecto) o glgat- (grupo), con el alcance read_api."
+      },
+      "required": true
+    },
+    {
+      "key": "repositories_intro",
+      "type": "section",
+      "label": {
+        "en": "Projects",
+        "fr": "Projets",
+        "de": "Projekte",
+        "es": "Proyectos"
+      },
+      "description": {
+        "en": "Each followed project becomes a device on the Discovery screen, next to a device for your account. Scene triggers and widgets pick them by device.",
+        "fr": "Chaque projet suivi devient un appareil dans l’écran de découverte, à côté d’un appareil pour votre compte. Les déclencheurs de scène et les widgets les choisissent par appareil.",
+        "de": "Jedes verfolgte Projekt wird zu einem Gerät im Reiter Entdecken, neben einem Gerät für dein Konto. Szenenauslöser und Widgets wählen sie über das Gerät aus.",
+        "es": "Cada proyecto seguido se convierte en un dispositivo en la pestaña Descubrir, junto a un dispositivo para tu cuenta. Los disparadores de escena y los widgets los eligen por dispositivo."
+      }
+    },
+    {
+      "key": "repositories",
+      "type": "string",
+      "label": {
+        "en": "Projects to follow",
+        "fr": "Projets à suivre",
+        "de": "Zu verfolgende Projekte",
+        "es": "Proyectos a seguir"
+      },
+      "description": {
+        "en": "group/project (subgroups included: group/subgroup/project) or its link, separated by commas (30 at most). group/* follows every project of a group or a user, group/gladys-* those starting with gladys-.",
+        "fr": "groupe/projet (sous-groupes compris : groupe/sous-groupe/projet) ou son lien, séparés par des virgules (30 au plus). groupe/* suit tous les projets d’un groupe ou d’un utilisateur, groupe/gladys-* ceux qui commencent par gladys-.",
+        "de": "Gruppe/Projekt (mit Untergruppen: Gruppe/Untergruppe/Projekt) oder sein Link, durch Kommas getrennt (höchstens 30). Gruppe/* verfolgt alle Projekte einer Gruppe oder eines Benutzers, Gruppe/gladys-* die mit gladys- beginnenden.",
+        "es": "grupo/proyecto (subgrupos incluidos: grupo/subgrupo/proyecto) o su enlace, separados por comas (30 como máximo). grupo/* sigue todos los proyectos de un grupo o de un usuario, grupo/gladys-* los que empiezan por gladys-."
+      },
+      "placeholder": {
+        "en": "gitlab-org/cli, my-group/*",
+        "fr": "gitlab-org/cli, mon-groupe/*",
+        "de": "gitlab-org/cli, meine-gruppe/*",
+        "es": "gitlab-org/cli, mi-grupo/*"
+      },
+      "required": false
+    },
+    {
+      "key": "poll_interval",
+      "type": "number",
+      "label": {
+        "en": "Refresh interval (s)",
+        "fr": "Intervalle de lecture (s)",
+        "de": "Abfrageintervall (s)",
+        "es": "Intervalo de lectura (s)"
+      },
+      "description": {
+        "en": "How often GitLab is read, between 60 and 3600 seconds. It is also the delay of the scene triggers.",
+        "fr": "Fréquence de lecture de GitLab, entre 60 et 3600 secondes. C’est aussi le délai de réaction des déclencheurs de scène.",
+        "de": "Wie oft GitLab gelesen wird, zwischen 60 und 3600 Sekunden. Das ist auch die Reaktionszeit der Szenenauslöser.",
+        "es": "Cada cuánto se lee GitLab, entre 60 y 3600 segundos. Es también el retardo de los disparadores de escena."
+      },
+      "min": 60,
+      "max": 3600,
+      "default": 120,
+      "required": false
+    },
+    {
+      "key": "language",
+      "type": "select",
+      "label": {
+        "en": "Language of the texts",
+        "fr": "Langue des textes",
+        "de": "Sprache der Texte",
+        "es": "Idioma de los textos"
+      },
+      "description": {
+        "en": "Device names, scene summaries and outputs. Automatic: the language of your dashboard, once a GitLab widget has been displayed.",
+        "fr": "Noms des appareils, résumés et sorties des scènes. Automatique : la langue de votre tableau de bord, dès qu’un widget GitLab a été affiché.",
+        "de": "Gerätenamen, Zusammenfassungen und Ausgaben der Szenen. Automatisch: die Sprache deines Dashboards, sobald ein GitLab-Widget angezeigt wurde.",
+        "es": "Nombres de los dispositivos, resúmenes y salidas de las escenas. Automático: el idioma de tu panel, en cuanto se haya mostrado un widget de GitLab."
+      },
+      "options": [
+        {
+          "value": "auto",
+          "label": {
+            "en": "Automatic",
+            "fr": "Automatique",
+            "de": "Automatisch",
+            "es": "Automático"
+          }
+        },
+        {
+          "value": "en",
+          "label": {
+            "en": "English",
+            "fr": "English",
+            "de": "English",
+            "es": "English"
+          }
+        },
+        {
+          "value": "fr",
+          "label": {
+            "en": "Français",
+            "fr": "Français",
+            "de": "Français",
+            "es": "Français"
+          }
+        },
+        {
+          "value": "de",
+          "label": {
+            "en": "Deutsch",
+            "fr": "Deutsch",
+            "de": "Deutsch",
+            "es": "Deutsch"
+          }
+        },
+        {
+          "value": "es",
+          "label": {
+            "en": "Español",
+            "fr": "Español",
+            "de": "Español",
+            "es": "Español"
+          }
+        }
+      ],
+      "default": "auto",
+      "required": false
+    }
+  ],
+  "actions": [
+    {
+      "key": "test_connection",
+      "label": {
+        "en": "Test the connection",
+        "fr": "Tester la connexion",
+        "de": "Verbindung testen",
+        "es": "Probar la conexión"
+      },
+      "description": {
+        "en": "Checks the address and the token, and reads every followed project.",
+        "fr": "Vérifie l’adresse et le jeton, et lit chaque projet suivi.",
+        "de": "Prüft die Adresse und das Token und liest jedes verfolgte Projekt.",
+        "es": "Comprueba la dirección y el token, y lee cada proyecto seguido."
+      },
+      "timeout_seconds": 30
+    }
+  ],
+  "widgets": [
+    {
+      "key": "repository",
+      "label": {
+        "en": "GitLab project",
+        "fr": "Projet GitLab",
+        "de": "GitLab-Projekt",
+        "es": "Proyecto de GitLab"
+      },
+      "description": {
+        "en": "Stars, forks, issues, merge requests, latest release and pipeline of a project.",
+        "fr": "Étoiles, forks, issues, merge requests, dernière version et pipeline d’un projet.",
+        "de": "Sterne, Forks, Issues, Merge-Requests, neuestes Release und Pipeline eines Projekts.",
+        "es": "Estrellas, forks, issues, merge requests, última versión y pipeline de un proyecto."
+      },
+      "icon": "gitlab",
+      "settings": [
+        {
+          "key": "repository",
+          "type": "select",
+          "source": "devices",
+          "label": {
+            "en": "Project",
+            "fr": "Projet",
+            "de": "Projekt",
+            "es": "Proyecto"
+          },
+          "description": {
+            "en": "Leave empty for the first followed project.",
+            "fr": "Laissez vide pour le premier projet suivi.",
+            "de": "Leer lassen für das erste verfolgte Projekt.",
+            "es": "Déjalo vacío para el primer proyecto seguido."
+          },
+          "required": false
+        }
+      ]
+    },
+    {
+      "key": "activity",
+      "label": {
+        "en": "GitLab activity",
+        "fr": "Activité GitLab",
+        "de": "GitLab-Aktivität",
+        "es": "Actividad de GitLab"
+      },
+      "description": {
+        "en": "The latest releases, issues, merge requests and commits, newest first.",
+        "fr": "Les dernières versions, issues, merge requests et commits, du plus récent au plus ancien.",
+        "de": "Die neuesten Releases, Issues, Merge-Requests und Commits, neueste zuerst.",
+        "es": "Las últimas versiones, issues, merge requests y commits, de la más reciente a la más antigua."
+      },
+      "icon": "activity",
+      "settings": [
+        {
+          "key": "repository",
+          "type": "select",
+          "source": "devices",
+          "label": {
+            "en": "Project",
+            "fr": "Projet",
+            "de": "Projekt",
+            "es": "Proyecto"
+          },
+          "description": {
+            "en": "Leave empty for every followed project.",
+            "fr": "Laissez vide pour tous les projets suivis.",
+            "de": "Leer lassen für alle verfolgten Projekte.",
+            "es": "Déjalo vacío para todos los proyectos seguidos."
+          },
+          "required": false
+        },
+        {
+          "key": "kind",
+          "type": "select",
+          "label": {
+            "en": "Show",
+            "fr": "Afficher",
+            "de": "Anzeigen",
+            "es": "Mostrar"
+          },
+          "options": [
+            {
+              "value": "all",
+              "label": {
+                "en": "Everything",
+                "fr": "Tout",
+                "de": "Alles",
+                "es": "Todo"
+              }
+            },
+            {
+              "value": "releases",
+              "label": {
+                "en": "Releases",
+                "fr": "Versions",
+                "de": "Releases",
+                "es": "Versiones"
+              }
+            },
+            {
+              "value": "issues",
+              "label": {
+                "en": "Issues",
+                "fr": "Issues",
+                "de": "Issues",
+                "es": "Issues"
+              }
+            },
+            {
+              "value": "merge_requests",
+              "label": {
+                "en": "Merge requests",
+                "fr": "Merge requests",
+                "de": "Merge-Requests",
+                "es": "Merge requests"
+              }
+            },
+            {
+              "value": "commits",
+              "label": {
+                "en": "Commits",
+                "fr": "Commits",
+                "de": "Commits",
+                "es": "Commits"
+              }
+            }
+          ],
+          "default": "all",
+          "required": false
+        },
+        {
+          "key": "count",
+          "type": "number",
+          "label": {
+            "en": "Entries shown",
+            "fr": "Entrées affichées",
+            "de": "Angezeigte Einträge",
+            "es": "Entradas mostradas"
+          },
+          "min": 1,
+          "max": 8,
+          "default": 6,
+          "required": false
+        }
+      ]
+    },
+    {
+      "key": "account",
+      "label": {
+        "en": "GitLab account",
+        "fr": "Compte GitLab",
+        "de": "GitLab-Konto",
+        "es": "Cuenta de GitLab"
+      },
+      "description": {
+        "en": "Followers, following, projects and the API quota left (gitlab.com).",
+        "fr": "Abonnés, abonnements, projets et quota d’API restant (gitlab.com).",
+        "de": "Follower, gefolgt, Projekte und verbleibendes API-Kontingent (gitlab.com).",
+        "es": "Seguidores, seguidos, proyectos y cuota de API restante (gitlab.com)."
+      },
+      "icon": "user"
+    }
+  ],
+  "scene_triggers": [
+    {
+      "key": "release_published",
+      "label": {
+        "en": "GitLab: release published",
+        "fr": "GitLab : version publiée",
+        "de": "GitLab: Release veröffentlicht",
+        "es": "GitLab: versión publicada"
+      },
+      "description": {
+        "en": "A followed project publishes a release. Checked every 2 minutes by default.",
+        "fr": "Un projet suivi publie une version. Vérifié toutes les 2 minutes par défaut.",
+        "de": "Ein verfolgtes Projekt veröffentlicht ein Release. Standardmäßig alle 2 Minuten geprüft.",
+        "es": "Un proyecto seguido publica una versión. Se comprueba cada 2 minutos por defecto."
+      },
+      "fields": [
+        {
+          "key": "repository",
+          "type": "select",
+          "source": "devices",
+          "label": {
+            "en": "Project",
+            "fr": "Projet",
+            "de": "Projekt",
+            "es": "Proyecto"
+          },
+          "description": {
+            "en": "One of the GitLab project devices. Leave empty for any project.",
+            "fr": "Un des appareils de projet GitLab. Laissez vide pour tous les projets.",
+            "de": "Eines der GitLab-Projekt-Geräte. Leer lassen für jedes Projekt.",
+            "es": "Uno de los dispositivos de proyecto de GitLab. Déjalo vacío para cualquier proyecto."
+          },
+          "required": false
+        }
+      ],
+      "variables": [
+        {
+          "key": "repository_name",
+          "type": "string",
+          "label": {
+            "en": "Project name",
+            "fr": "Nom du projet",
+            "de": "Projekt-Name",
+            "es": "Nombre del proyecto"
+          },
+          "description": {
+            "en": "owner/name",
+            "fr": "propriétaire/nom",
+            "de": "Besitzer/Name",
+            "es": "propietario/nombre"
+          }
+        },
+        {
+          "key": "name",
+          "type": "string",
+          "label": {
+            "en": "Release name",
+            "fr": "Nom de la version",
+            "de": "Release-Name",
+            "es": "Nombre de la versión"
+          }
+        },
+        {
+          "key": "tag",
+          "type": "string",
+          "label": {
+            "en": "Tag",
+            "fr": "Tag",
+            "de": "Tag",
+            "es": "Etiqueta"
+          }
+        },
+        {
+          "key": "author",
+          "type": "string",
+          "label": {
+            "en": "Author",
+            "fr": "Auteur",
+            "de": "Autor",
+            "es": "Autor"
+          }
+        },
+        {
+          "key": "url",
+          "type": "string",
+          "label": {
+            "en": "GitLab link",
+            "fr": "Lien GitLab",
+            "de": "GitLab-Link",
+            "es": "Enlace de GitLab"
+          }
+        },
+        {
+          "key": "summary",
+          "type": "string",
+          "label": {
+            "en": "Summary",
+            "fr": "Résumé",
+            "de": "Zusammenfassung",
+            "es": "Resumen"
+          },
+          "description": {
+            "en": "A sentence ready to put in a message.",
+            "fr": "Une phrase prête à mettre dans un message.",
+            "de": "Ein fertiger Satz für eine Nachricht.",
+            "es": "Una frase lista para poner en un mensaje."
+          }
+        }
+      ]
+    },
+    {
+      "key": "issue_opened",
+      "label": {
+        "en": "GitLab: issue opened",
+        "fr": "GitLab : issue ouverte",
+        "de": "GitLab: Issue eröffnet",
+        "es": "GitLab: issue abierta"
+      },
+      "description": {
+        "en": "Someone opens an issue on a followed project.",
+        "fr": "Quelqu’un ouvre une issue sur un projet suivi.",
+        "de": "Jemand eröffnet ein Issue in einem verfolgten Projekt.",
+        "es": "Alguien abre una issue en un proyecto seguido."
+      },
+      "fields": [
+        {
+          "key": "repository",
+          "type": "select",
+          "source": "devices",
+          "label": {
+            "en": "Project",
+            "fr": "Projet",
+            "de": "Projekt",
+            "es": "Proyecto"
+          },
+          "description": {
+            "en": "One of the GitLab project devices. Leave empty for any project.",
+            "fr": "Un des appareils de projet GitLab. Laissez vide pour tous les projets.",
+            "de": "Eines der GitLab-Projekt-Geräte. Leer lassen für jedes Projekt.",
+            "es": "Uno de los dispositivos de proyecto de GitLab. Déjalo vacío para cualquier proyecto."
+          },
+          "required": false
+        }
+      ],
+      "variables": [
+        {
+          "key": "repository_name",
+          "type": "string",
+          "label": {
+            "en": "Project name",
+            "fr": "Nom du projet",
+            "de": "Projekt-Name",
+            "es": "Nombre del proyecto"
+          },
+          "description": {
+            "en": "owner/name",
+            "fr": "propriétaire/nom",
+            "de": "Besitzer/Name",
+            "es": "propietario/nombre"
+          }
+        },
+        {
+          "key": "number",
+          "type": "number",
+          "label": {
+            "en": "Number",
+            "fr": "Numéro",
+            "de": "Nummer",
+            "es": "Número"
+          }
+        },
+        {
+          "key": "title",
+          "type": "string",
+          "label": {
+            "en": "Title",
+            "fr": "Titre",
+            "de": "Titel",
+            "es": "Título"
+          }
+        },
+        {
+          "key": "author",
+          "type": "string",
+          "label": {
+            "en": "Author",
+            "fr": "Auteur",
+            "de": "Autor",
+            "es": "Autor"
+          }
+        },
+        {
+          "key": "url",
+          "type": "string",
+          "label": {
+            "en": "GitLab link",
+            "fr": "Lien GitLab",
+            "de": "GitLab-Link",
+            "es": "Enlace de GitLab"
+          }
+        },
+        {
+          "key": "summary",
+          "type": "string",
+          "label": {
+            "en": "Summary",
+            "fr": "Résumé",
+            "de": "Zusammenfassung",
+            "es": "Resumen"
+          },
+          "description": {
+            "en": "A sentence ready to put in a message.",
+            "fr": "Une phrase prête à mettre dans un message.",
+            "de": "Ein fertiger Satz für eine Nachricht.",
+            "es": "Una frase lista para poner en un mensaje."
+          }
+        }
+      ]
+    },
+    {
+      "key": "merge_request_opened",
+      "label": {
+        "en": "GitLab: merge request opened",
+        "fr": "GitLab : merge request ouverte",
+        "de": "GitLab: Merge-Request geöffnet",
+        "es": "GitLab: merge request abierta"
+      },
+      "description": {
+        "en": "Someone opens a merge request on a followed project.",
+        "fr": "Quelqu’un ouvre une merge request sur un projet suivi.",
+        "de": "Jemand öffnet einen Merge-Request in einem verfolgten Projekt.",
+        "es": "Alguien abre una merge request en un proyecto seguido."
+      },
+      "fields": [
+        {
+          "key": "repository",
+          "type": "select",
+          "source": "devices",
+          "label": {
+            "en": "Project",
+            "fr": "Projet",
+            "de": "Projekt",
+            "es": "Proyecto"
+          },
+          "description": {
+            "en": "One of the GitLab project devices. Leave empty for any project.",
+            "fr": "Un des appareils de projet GitLab. Laissez vide pour tous les projets.",
+            "de": "Eines der GitLab-Projekt-Geräte. Leer lassen für jedes Projekt.",
+            "es": "Uno de los dispositivos de proyecto de GitLab. Déjalo vacío para cualquier proyecto."
+          },
+          "required": false
+        }
+      ],
+      "variables": [
+        {
+          "key": "repository_name",
+          "type": "string",
+          "label": {
+            "en": "Project name",
+            "fr": "Nom du projet",
+            "de": "Projekt-Name",
+            "es": "Nombre del proyecto"
+          },
+          "description": {
+            "en": "owner/name",
+            "fr": "propriétaire/nom",
+            "de": "Besitzer/Name",
+            "es": "propietario/nombre"
+          }
+        },
+        {
+          "key": "number",
+          "type": "number",
+          "label": {
+            "en": "Number",
+            "fr": "Numéro",
+            "de": "Nummer",
+            "es": "Número"
+          }
+        },
+        {
+          "key": "title",
+          "type": "string",
+          "label": {
+            "en": "Title",
+            "fr": "Titre",
+            "de": "Titel",
+            "es": "Título"
+          }
+        },
+        {
+          "key": "author",
+          "type": "string",
+          "label": {
+            "en": "Author",
+            "fr": "Auteur",
+            "de": "Autor",
+            "es": "Autor"
+          }
+        },
+        {
+          "key": "draft",
+          "type": "boolean",
+          "label": {
+            "en": "Draft",
+            "fr": "Brouillon",
+            "de": "Entwurf",
+            "es": "Borrador"
+          }
+        },
+        {
+          "key": "url",
+          "type": "string",
+          "label": {
+            "en": "GitLab link",
+            "fr": "Lien GitLab",
+            "de": "GitLab-Link",
+            "es": "Enlace de GitLab"
+          }
+        },
+        {
+          "key": "summary",
+          "type": "string",
+          "label": {
+            "en": "Summary",
+            "fr": "Résumé",
+            "de": "Zusammenfassung",
+            "es": "Resumen"
+          },
+          "description": {
+            "en": "A sentence ready to put in a message.",
+            "fr": "Une phrase prête à mettre dans un message.",
+            "de": "Ein fertiger Satz für eine Nachricht.",
+            "es": "Una frase lista para poner en un mensaje."
+          }
+        }
+      ]
+    },
+    {
+      "key": "commit_pushed",
+      "label": {
+        "en": "GitLab: new commit",
+        "fr": "GitLab : nouveau commit",
+        "de": "GitLab: neuer Commit",
+        "es": "GitLab: nuevo commit"
+      },
+      "description": {
+        "en": "A commit lands on the default branch of a followed project (merges included).",
+        "fr": "Un commit arrive sur la branche par défaut d’un projet suivi (fusions comprises).",
+        "de": "Ein Commit landet im Standard-Branch eines verfolgten Projekte (Merges inbegriffen).",
+        "es": "Un commit llega a la rama predeterminada de un proyecto seguido (fusiones incluidas)."
+      },
+      "fields": [
+        {
+          "key": "repository",
+          "type": "select",
+          "source": "devices",
+          "label": {
+            "en": "Project",
+            "fr": "Projet",
+            "de": "Projekt",
+            "es": "Proyecto"
+          },
+          "description": {
+            "en": "One of the GitLab project devices. Leave empty for any project.",
+            "fr": "Un des appareils de projet GitLab. Laissez vide pour tous les projets.",
+            "de": "Eines der GitLab-Projekt-Geräte. Leer lassen für jedes Projekt.",
+            "es": "Uno de los dispositivos de proyecto de GitLab. Déjalo vacío para cualquier proyecto."
+          },
+          "required": false
+        }
+      ],
+      "variables": [
+        {
+          "key": "repository_name",
+          "type": "string",
+          "label": {
+            "en": "Project name",
+            "fr": "Nom du projet",
+            "de": "Projekt-Name",
+            "es": "Nombre del proyecto"
+          },
+          "description": {
+            "en": "owner/name",
+            "fr": "propriétaire/nom",
+            "de": "Besitzer/Name",
+            "es": "propietario/nombre"
+          }
+        },
+        {
+          "key": "branch",
+          "type": "string",
+          "label": {
+            "en": "Branch",
+            "fr": "Branche",
+            "de": "Branch",
+            "es": "Rama"
+          }
+        },
+        {
+          "key": "sha",
+          "type": "string",
+          "label": {
+            "en": "Commit SHA",
+            "fr": "SHA du commit",
+            "de": "Commit-SHA",
+            "es": "SHA del commit"
+          }
+        },
+        {
+          "key": "message",
+          "type": "string",
+          "label": {
+            "en": "Commit message",
+            "fr": "Message du commit",
+            "de": "Commit-Nachricht",
+            "es": "Mensaje del commit"
+          }
+        },
+        {
+          "key": "author",
+          "type": "string",
+          "label": {
+            "en": "Author",
+            "fr": "Auteur",
+            "de": "Autor",
+            "es": "Autor"
+          }
+        },
+        {
+          "key": "url",
+          "type": "string",
+          "label": {
+            "en": "GitLab link",
+            "fr": "Lien GitLab",
+            "de": "GitLab-Link",
+            "es": "Enlace de GitLab"
+          }
+        },
+        {
+          "key": "summary",
+          "type": "string",
+          "label": {
+            "en": "Summary",
+            "fr": "Résumé",
+            "de": "Zusammenfassung",
+            "es": "Resumen"
+          },
+          "description": {
+            "en": "A sentence ready to put in a message.",
+            "fr": "Une phrase prête à mettre dans un message.",
+            "de": "Ein fertiger Satz für eine Nachricht.",
+            "es": "Una frase lista para poner en un mensaje."
+          }
+        }
+      ]
+    },
+    {
+      "key": "star_added",
+      "label": {
+        "en": "GitLab: new star",
+        "fr": "GitLab : nouvelle étoile",
+        "de": "GitLab: neuer Stern",
+        "es": "GitLab: nueva estrella"
+      },
+      "description": {
+        "en": "The star count of a followed project goes up.",
+        "fr": "Le nombre d’étoiles d’un projet suivi augmente.",
+        "de": "Die Zahl der Sterne eines verfolgten Projekte steigt.",
+        "es": "El número de estrellas de un proyecto seguido aumenta."
+      },
+      "fields": [
+        {
+          "key": "repository",
+          "type": "select",
+          "source": "devices",
+          "label": {
+            "en": "Project",
+            "fr": "Projet",
+            "de": "Projekt",
+            "es": "Proyecto"
+          },
+          "description": {
+            "en": "One of the GitLab project devices. Leave empty for any project.",
+            "fr": "Un des appareils de projet GitLab. Laissez vide pour tous les projets.",
+            "de": "Eines der GitLab-Projekt-Geräte. Leer lassen für jedes Projekt.",
+            "es": "Uno de los dispositivos de proyecto de GitLab. Déjalo vacío para cualquier proyecto."
+          },
+          "required": false
+        }
+      ],
+      "variables": [
+        {
+          "key": "repository_name",
+          "type": "string",
+          "label": {
+            "en": "Project name",
+            "fr": "Nom du projet",
+            "de": "Projekt-Name",
+            "es": "Nombre del proyecto"
+          },
+          "description": {
+            "en": "owner/name",
+            "fr": "propriétaire/nom",
+            "de": "Besitzer/Name",
+            "es": "propietario/nombre"
+          }
+        },
+        {
+          "key": "stars",
+          "type": "number",
+          "label": {
+            "en": "Stars",
+            "fr": "Étoiles",
+            "de": "Sterne",
+            "es": "Estrellas"
+          }
+        },
+        {
+          "key": "added",
+          "type": "number",
+          "label": {
+            "en": "Stars added",
+            "fr": "Étoiles ajoutées",
+            "de": "Neue Sterne",
+            "es": "Estrellas añadidas"
+          }
+        },
+        {
+          "key": "url",
+          "type": "string",
+          "label": {
+            "en": "GitLab link",
+            "fr": "Lien GitLab",
+            "de": "GitLab-Link",
+            "es": "Enlace de GitLab"
+          }
+        },
+        {
+          "key": "summary",
+          "type": "string",
+          "label": {
+            "en": "Summary",
+            "fr": "Résumé",
+            "de": "Zusammenfassung",
+            "es": "Resumen"
+          },
+          "description": {
+            "en": "A sentence ready to put in a message.",
+            "fr": "Une phrase prête à mettre dans un message.",
+            "de": "Ein fertiger Satz für eine Nachricht.",
+            "es": "Una frase lista para poner en un mensaje."
+          }
+        }
+      ]
+    },
+    {
+      "key": "pipeline_completed",
+      "label": {
+        "en": "GitLab: pipeline completed",
+        "fr": "GitLab : pipeline terminé",
+        "de": "GitLab: Pipeline abgeschlossen",
+        "es": "GitLab: pipeline terminado"
+      },
+      "description": {
+        "en": "The last pipeline of the default branch of a followed project succeeds, fails or is canceled.",
+        "fr": "Le dernier pipeline de la branche par défaut d’un projet suivi réussit, échoue ou est annulé.",
+        "de": "Die letzte Pipeline des Standard-Branches eines verfolgten Projekts ist erfolgreich, schlägt fehl oder wird abgebrochen.",
+        "es": "El último pipeline de la rama por defecto de un proyecto seguido termina bien, falla o se cancela."
+      },
+      "fields": [
+        {
+          "key": "repository",
+          "type": "select",
+          "source": "devices",
+          "label": {
+            "en": "Project",
+            "fr": "Projet",
+            "de": "Projekt",
+            "es": "Proyecto"
+          },
+          "description": {
+            "en": "One of the GitLab project devices. Leave empty for any project.",
+            "fr": "Un des appareils de projet GitLab. Laissez vide pour tous les projets.",
+            "de": "Eines der GitLab-Projekt-Geräte. Leer lassen für jedes Projekt.",
+            "es": "Uno de los dispositivos de proyecto de GitLab. Déjalo vacío para cualquier proyecto."
+          },
+          "required": false
+        },
+        {
+          "key": "state",
+          "type": "select",
+          "label": {
+            "en": "Result",
+            "fr": "Résultat",
+            "de": "Ergebnis",
+            "es": "Resultado"
+          },
+          "description": {
+            "en": "Leave empty for any.",
+            "fr": "Laissez vide pour tous.",
+            "de": "Leer lassen für jedes.",
+            "es": "Déjalo vacío para cualquiera."
+          },
+          "options": [
+            {
+              "value": "success",
+              "label": {
+                "en": "Passed",
+                "fr": "Réussi",
+                "de": "Erfolgreich",
+                "es": "Correcto"
+              }
+            },
+            {
+              "value": "failed",
+              "label": {
+                "en": "Failed",
+                "fr": "Échoué",
+                "de": "Fehlgeschlagen",
+                "es": "Fallido"
+              }
+            },
+            {
+              "value": "canceled",
+              "label": {
+                "en": "Canceled",
+                "fr": "Annulé",
+                "de": "Abgebrochen",
+                "es": "Cancelado"
+              }
+            }
+          ],
+          "required": false
+        }
+      ],
+      "variables": [
+        {
+          "key": "repository_name",
+          "type": "string",
+          "label": {
+            "en": "Project name",
+            "fr": "Nom du projet",
+            "de": "Projekt-Name",
+            "es": "Nombre del proyecto"
+          },
+          "description": {
+            "en": "owner/name",
+            "fr": "propriétaire/nom",
+            "de": "Besitzer/Name",
+            "es": "propietario/nombre"
+          }
+        },
+        {
+          "key": "state",
+          "type": "string",
+          "label": {
+            "en": "Result (success, failed, canceled)",
+            "fr": "Résultat (success, failed, canceled)",
+            "de": "Ergebnis (success, failed, canceled)",
+            "es": "Resultado (success, failed, canceled)"
+          }
+        },
+        {
+          "key": "branch",
+          "type": "string",
+          "label": {
+            "en": "Branch",
+            "fr": "Branche",
+            "de": "Branch",
+            "es": "Rama"
+          }
+        },
+        {
+          "key": "sha",
+          "type": "string",
+          "label": {
+            "en": "Commit SHA",
+            "fr": "SHA du commit",
+            "de": "Commit-SHA",
+            "es": "SHA del commit"
+          }
+        },
+        {
+          "key": "message",
+          "type": "string",
+          "label": {
+            "en": "Commit message",
+            "fr": "Message du commit",
+            "de": "Commit-Nachricht",
+            "es": "Mensaje del commit"
+          }
+        },
+        {
+          "key": "url",
+          "type": "string",
+          "label": {
+            "en": "Pipeline link",
+            "fr": "Lien du pipeline",
+            "de": "Link zur Pipeline",
+            "es": "Enlace del pipeline"
+          }
+        },
+        {
+          "key": "summary",
+          "type": "string",
+          "label": {
+            "en": "Summary",
+            "fr": "Résumé",
+            "de": "Zusammenfassung",
+            "es": "Resumen"
+          },
+          "description": {
+            "en": "A sentence ready to put in a message.",
+            "fr": "Une phrase prête à mettre dans un message.",
+            "de": "Ein fertiger Satz für eine Nachricht.",
+            "es": "Una frase lista para poner en un mensaje."
+          }
+        }
+      ]
+    }
+  ],
+  "scene_actions": [
+    {
+      "key": "get_repository",
+      "label": {
+        "en": "GitLab: read a project",
+        "fr": "GitLab : lire un projet",
+        "de": "GitLab: Projekt lesen",
+        "es": "GitLab: leer un proyecto"
+      },
+      "description": {
+        "en": "The figures and latest items of a project, for a message or a condition.",
+        "fr": "Les chiffres et derniers éléments d’un projet, pour un message ou une condition.",
+        "de": "Die Zahlen und neuesten Einträge eines Projekte, für eine Nachricht oder eine Bedingung.",
+        "es": "Las cifras y últimos elementos de un proyecto, para un mensaje o una condición."
+      },
+      "timeout_seconds": 30,
+      "fields": [
+        {
+          "key": "repository",
+          "type": "select",
+          "source": "devices",
+          "label": {
+            "en": "Project",
+            "fr": "Projet",
+            "de": "Projekt",
+            "es": "Proyecto"
+          },
+          "description": {
+            "en": "Leave empty for the first followed project.",
+            "fr": "Laissez vide pour le premier projet suivi.",
+            "de": "Leer lassen für das erste verfolgte Projekt.",
+            "es": "Déjalo vacío para el primer proyecto seguido."
+          },
+          "required": false
+        }
+      ],
+      "outputs": [
+        {
+          "key": "repository_name",
+          "type": "string",
+          "label": {
+            "en": "Project name",
+            "fr": "Nom du projet",
+            "de": "Projekt-Name",
+            "es": "Nombre del proyecto"
+          },
+          "description": {
+            "en": "owner/name",
+            "fr": "propriétaire/nom",
+            "de": "Besitzer/Name",
+            "es": "propietario/nombre"
+          }
+        },
+        {
+          "key": "url",
+          "type": "string",
+          "label": {
+            "en": "GitLab link",
+            "fr": "Lien GitLab",
+            "de": "GitLab-Link",
+            "es": "Enlace de GitLab"
+          }
+        },
+        {
+          "key": "stars",
+          "type": "number",
+          "label": {
+            "en": "Stars",
+            "fr": "Étoiles",
+            "de": "Sterne",
+            "es": "Estrellas"
+          },
+          "description": {
+            "en": "-1 when GitLab did not say.",
+            "fr": "-1 si GitLab ne l’a pas indiqué.",
+            "de": "-1, wenn GitLab es nicht angegeben hat.",
+            "es": "-1 si GitLab no lo ha indicado."
+          }
+        },
+        {
+          "key": "forks",
+          "type": "number",
+          "label": {
+            "en": "Forks",
+            "fr": "Forks",
+            "de": "Forks",
+            "es": "Forks"
+          },
+          "description": {
+            "en": "-1 when GitLab did not say.",
+            "fr": "-1 si GitLab ne l’a pas indiqué.",
+            "de": "-1, wenn GitLab es nicht angegeben hat.",
+            "es": "-1 si GitLab no lo ha indicado."
+          }
+        },
+        {
+          "key": "open_issues",
+          "type": "number",
+          "label": {
+            "en": "Open issues",
+            "fr": "Issues ouvertes",
+            "de": "Offene Issues",
+            "es": "Issues abiertas"
+          },
+          "description": {
+            "en": "-1 when GitLab did not say.",
+            "fr": "-1 si GitLab ne l’a pas indiqué.",
+            "de": "-1, wenn GitLab es nicht angegeben hat.",
+            "es": "-1 si GitLab no lo ha indicado."
+          }
+        },
+        {
+          "key": "open_merge_requests",
+          "type": "number",
+          "label": {
+            "en": "Open merge requests",
+            "fr": "Merge requests ouvertes",
+            "de": "Offene Merge-Requests",
+            "es": "Merge requests abiertas"
+          },
+          "description": {
+            "en": "-1 when GitLab did not say.",
+            "fr": "-1 si GitLab ne l’a pas indiqué.",
+            "de": "-1, wenn GitLab es nicht angegeben hat.",
+            "es": "-1 si GitLab no lo ha indicado."
+          }
+        },
+        {
+          "key": "latest_release",
+          "type": "string",
+          "label": {
+            "en": "Latest release",
+            "fr": "Dernière version",
+            "de": "Neuestes Release",
+            "es": "Última versión"
+          }
+        },
+        {
+          "key": "latest_release_url",
+          "type": "string",
+          "label": {
+            "en": "Latest release link",
+            "fr": "Lien de la dernière version",
+            "de": "Link zum neuesten Release",
+            "es": "Enlace de la última versión"
+          }
+        },
+        {
+          "key": "latest_commit",
+          "type": "string",
+          "label": {
+            "en": "Latest commit",
+            "fr": "Dernier commit",
+            "de": "Neuester Commit",
+            "es": "Último commit"
+          }
+        },
+        {
+          "key": "pipeline",
+          "type": "string",
+          "label": {
+            "en": "Pipeline",
+            "fr": "Pipeline",
+            "de": "Pipeline",
+            "es": "Pipeline"
+          },
+          "description": {
+            "en": "success, failed, canceled, running, or empty without a pipeline.",
+            "fr": "success, failed, canceled, running, ou vide sans pipeline.",
+            "de": "success, failed, canceled, running oder leer ohne Pipeline.",
+            "es": "success, failed, canceled, running, o vacío sin pipeline."
+          }
+        },
+        {
+          "key": "summary",
+          "type": "string",
+          "label": {
+            "en": "Summary",
+            "fr": "Résumé",
+            "de": "Zusammenfassung",
+            "es": "Resumen"
+          },
+          "description": {
+            "en": "A sentence ready to put in a message.",
+            "fr": "Une phrase prête à mettre dans un message.",
+            "de": "Ein fertiger Satz für eine Nachricht.",
+            "es": "Una frase lista para poner en un mensaje."
+          }
+        }
+      ]
+    }
+  ]
+}

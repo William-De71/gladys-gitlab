@@ -1,0 +1,472 @@
+{
+  "version": "0.1.0",
+  "devices": {
+    "repository": {
+      "external_id": "ext:gitlab:repository:101",
+      "should_poll": false,
+      "params": ["GITLAB_PROJECT"],
+      "features": [
+        {
+          "external_id": "ext:gitlab:repository:101:stars",
+          "category": "counter-sensor",
+          "type": "integer",
+          "min": 0,
+          "max": 100000000,
+          "read_only": true,
+          "has_feedback": false
+        },
+        {
+          "external_id": "ext:gitlab:repository:101:forks",
+          "category": "counter-sensor",
+          "type": "integer",
+          "min": 0,
+          "max": 100000000,
+          "read_only": true,
+          "has_feedback": false
+        },
+        {
+          "external_id": "ext:gitlab:repository:101:open_issues",
+          "category": "counter-sensor",
+          "type": "integer",
+          "min": 0,
+          "max": 100000000,
+          "read_only": true,
+          "has_feedback": false
+        },
+        {
+          "external_id": "ext:gitlab:repository:101:open_merge_requests",
+          "category": "counter-sensor",
+          "type": "integer",
+          "min": 0,
+          "max": 100000000,
+          "read_only": true,
+          "has_feedback": false
+        },
+        {
+          "external_id": "ext:gitlab:repository:101:merged_merge_requests",
+          "category": "counter-sensor",
+          "type": "integer",
+          "min": 0,
+          "max": 100000000,
+          "read_only": true,
+          "has_feedback": false
+        },
+        {
+          "external_id": "ext:gitlab:repository:101:latest_release",
+          "category": "text",
+          "type": "text",
+          "min": 0,
+          "max": 0,
+          "read_only": true,
+          "has_feedback": false
+        },
+        {
+          "external_id": "ext:gitlab:repository:101:latest_tag",
+          "category": "text",
+          "type": "text",
+          "min": 0,
+          "max": 0,
+          "read_only": true,
+          "has_feedback": false
+        },
+        {
+          "external_id": "ext:gitlab:repository:101:latest_commit",
+          "category": "text",
+          "type": "text",
+          "min": 0,
+          "max": 0,
+          "read_only": true,
+          "has_feedback": false
+        },
+        {
+          "external_id": "ext:gitlab:repository:101:latest_issue",
+          "category": "text",
+          "type": "text",
+          "min": 0,
+          "max": 0,
+          "read_only": true,
+          "has_feedback": false
+        },
+        {
+          "external_id": "ext:gitlab:repository:101:latest_merge_request",
+          "category": "text",
+          "type": "text",
+          "min": 0,
+          "max": 0,
+          "read_only": true,
+          "has_feedback": false
+        },
+        {
+          "external_id": "ext:gitlab:repository:101:pipeline",
+          "category": "text",
+          "type": "text",
+          "min": 0,
+          "max": 0,
+          "read_only": true,
+          "has_feedback": false
+        }
+      ]
+    },
+    "account": {
+      "external_id": "ext:gitlab:account:7",
+      "should_poll": false,
+      "params": ["GITLAB_USERNAME"],
+      "features": [
+        {
+          "external_id": "ext:gitlab:account:7:followers",
+          "category": "counter-sensor",
+          "type": "integer",
+          "min": 0,
+          "max": 100000000,
+          "read_only": true,
+          "has_feedback": false
+        },
+        {
+          "external_id": "ext:gitlab:account:7:following",
+          "category": "counter-sensor",
+          "type": "integer",
+          "min": 0,
+          "max": 100000000,
+          "read_only": true,
+          "has_feedback": false
+        },
+        {
+          "external_id": "ext:gitlab:account:7:projects",
+          "category": "counter-sensor",
+          "type": "integer",
+          "min": 0,
+          "max": 100000000,
+          "read_only": true,
+          "has_feedback": false
+        }
+      ]
+    }
+  },
+  "manifest": {
+    "config_schema": [
+      {
+        "key": "intro",
+        "type": "section"
+      },
+      {
+        "key": "url",
+        "type": "string"
+      },
+      {
+        "key": "token",
+        "type": "secret"
+      },
+      {
+        "key": "repositories_intro",
+        "type": "section"
+      },
+      {
+        "key": "repositories",
+        "type": "string"
+      },
+      {
+        "key": "poll_interval",
+        "type": "number"
+      },
+      {
+        "key": "language",
+        "type": "select"
+      }
+    ],
+    "scene_triggers": [
+      {
+        "key": "release_published",
+        "fields": [
+          {
+            "key": "repository",
+            "options": []
+          }
+        ],
+        "variables": [
+          {
+            "key": "repository_name",
+            "type": "string"
+          },
+          {
+            "key": "name",
+            "type": "string"
+          },
+          {
+            "key": "tag",
+            "type": "string"
+          },
+          {
+            "key": "author",
+            "type": "string"
+          },
+          {
+            "key": "url",
+            "type": "string"
+          },
+          {
+            "key": "summary",
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "key": "issue_opened",
+        "fields": [
+          {
+            "key": "repository",
+            "options": []
+          }
+        ],
+        "variables": [
+          {
+            "key": "repository_name",
+            "type": "string"
+          },
+          {
+            "key": "number",
+            "type": "number"
+          },
+          {
+            "key": "title",
+            "type": "string"
+          },
+          {
+            "key": "author",
+            "type": "string"
+          },
+          {
+            "key": "url",
+            "type": "string"
+          },
+          {
+            "key": "summary",
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "key": "merge_request_opened",
+        "fields": [
+          {
+            "key": "repository",
+            "options": []
+          }
+        ],
+        "variables": [
+          {
+            "key": "repository_name",
+            "type": "string"
+          },
+          {
+            "key": "number",
+            "type": "number"
+          },
+          {
+            "key": "title",
+            "type": "string"
+          },
+          {
+            "key": "author",
+            "type": "string"
+          },
+          {
+            "key": "draft",
+            "type": "boolean"
+          },
+          {
+            "key": "url",
+            "type": "string"
+          },
+          {
+            "key": "summary",
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "key": "commit_pushed",
+        "fields": [
+          {
+            "key": "repository",
+            "options": []
+          }
+        ],
+        "variables": [
+          {
+            "key": "repository_name",
+            "type": "string"
+          },
+          {
+            "key": "branch",
+            "type": "string"
+          },
+          {
+            "key": "sha",
+            "type": "string"
+          },
+          {
+            "key": "message",
+            "type": "string"
+          },
+          {
+            "key": "author",
+            "type": "string"
+          },
+          {
+            "key": "url",
+            "type": "string"
+          },
+          {
+            "key": "summary",
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "key": "star_added",
+        "fields": [
+          {
+            "key": "repository",
+            "options": []
+          }
+        ],
+        "variables": [
+          {
+            "key": "repository_name",
+            "type": "string"
+          },
+          {
+            "key": "stars",
+            "type": "number"
+          },
+          {
+            "key": "added",
+            "type": "number"
+          },
+          {
+            "key": "url",
+            "type": "string"
+          },
+          {
+            "key": "summary",
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "key": "pipeline_completed",
+        "fields": [
+          {
+            "key": "repository",
+            "options": []
+          },
+          {
+            "key": "state",
+            "options": ["success", "failed", "canceled"]
+          }
+        ],
+        "variables": [
+          {
+            "key": "repository_name",
+            "type": "string"
+          },
+          {
+            "key": "state",
+            "type": "string"
+          },
+          {
+            "key": "branch",
+            "type": "string"
+          },
+          {
+            "key": "sha",
+            "type": "string"
+          },
+          {
+            "key": "message",
+            "type": "string"
+          },
+          {
+            "key": "url",
+            "type": "string"
+          },
+          {
+            "key": "summary",
+            "type": "string"
+          }
+        ]
+      }
+    ],
+    "scene_actions": [
+      {
+        "key": "get_repository",
+        "fields": ["repository"],
+        "outputs": [
+          {
+            "key": "repository_name",
+            "type": "string"
+          },
+          {
+            "key": "url",
+            "type": "string"
+          },
+          {
+            "key": "stars",
+            "type": "number"
+          },
+          {
+            "key": "forks",
+            "type": "number"
+          },
+          {
+            "key": "open_issues",
+            "type": "number"
+          },
+          {
+            "key": "open_merge_requests",
+            "type": "number"
+          },
+          {
+            "key": "latest_release",
+            "type": "string"
+          },
+          {
+            "key": "latest_release_url",
+            "type": "string"
+          },
+          {
+            "key": "latest_commit",
+            "type": "string"
+          },
+          {
+            "key": "pipeline",
+            "type": "string"
+          },
+          {
+            "key": "summary",
+            "type": "string"
+          }
+        ]
+      }
+    ],
+    "widgets": [
+      {
+        "key": "repository",
+        "settings": ["repository"],
+        "options": {}
+      },
+      {
+        "key": "activity",
+        "settings": ["repository", "kind", "count"],
+        "options": {
+          "kind": ["all", "releases", "issues", "merge_requests", "commits"]
+        }
+      },
+      {
+        "key": "account",
+        "settings": [],
+        "options": {}
+      }
+    ]
+  }
+}
