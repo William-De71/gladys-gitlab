@@ -5,7 +5,7 @@ follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and versions
 follow [Semantic Versioning](https://semver.org/). This file is generated at
 each release from the Conventional Commits: do not edit it by hand.
 
-## [0.1.0] - unreleased
+## [0.1.0] - 2026-11-05
 
 ### Added
 
@@ -14,3 +14,5 @@ each release from the Conventional Commits: do not edit it by hand.
 - **widgets:** a project at a glance, the latest activity of the followed projects, and the account with the API quota left
 - **configuration:** instance address, access token, projects with `group/*` and `group/prefix*` patterns (subgroups included), reading interval, language, "Test the connection" button
 - **i18n:** English, French, German and Spanish for the manifest, the runtime texts, the documentation and the README
+
+[0.1.0]: https://github.com/William-De71/gladys-gitlab/releases/tag/v0.1.0
